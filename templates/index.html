@@ -3,17 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Generator</title>
+    <title>Signup</title>
+    <script>
+        function generatePassword() {
+            fetch('/generate-password')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('password').value = data.password;
+                    document.getElementById('confirm_password').value = data.password;
+                });
+        }
+    </script>
 </head>
 <body>
-    <h1>Password Generator</h1>
-    <form method="POST">
-        <label for="length">Password Length:</label>
-        <input type="number" id="length" name="length" min="1" value="12">
-        <button type="submit">Generate</button>
+    <h1>Signup</h1>
+    <form method="POST" action="/signup">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" id="confirm_password" name="confirm_password" required><br>
+
+        <button type="button" onclick="generatePassword()">Generate Password</button><br>
+        <button type="submit">Signup</button>
     </form>
-    {% if password %}
-        <p>Your generated password: <strong>{{ password }}</strong></p>
-    {% endif %}
 </body>
 </html>
