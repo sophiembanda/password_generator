@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Meta tag to set the viewport to ensure the page is rendered well on different devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup</title>
+    <title>Login</title>
+    <!-- Link to Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
+        /* CSS to position the password input field and toggle icon */
         .password-container {
             position: relative;
             display: inline-block;
@@ -19,47 +22,40 @@
         }
     </style>
     <script>
-        function generatePassword() {
-            fetch('/generate-password')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('password').value = data.password;
-                    document.getElementById('confirm_password').value = data.password;
-                });
-        }
-
         document.addEventListener('DOMContentLoaded', function () {
             const togglePassword = document.querySelector('#togglePassword');
             const password = document.querySelector('#password');
 
             togglePassword.addEventListener('click', function (e) {
+                // Toggle the type attribute
                 const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
                 password.setAttribute('type', type);
+                // Toggle the eye slash icon
                 this.classList.toggle('fa-eye-slash');
             });
         });
     </script>
 </head>
 <body>
-    <h1>Signup</h1>
-    <form method="POST" action="/signup">
+    <!-- Main heading -->
+    <h1>Login</h1>
+
+    <!-- Login form with username and password fields -->
+    <form method="POST" action="/login">
+        <!-- Username input field -->
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br>
 
+        <!-- Password input field with toggle visibility -->
         <label for="password">Password:</label>
         <div class="password-container">
             <input type="password" id="password" name="password" required>
+            <!-- Icon to toggle password visibility -->
             <i class="far fa-eye password-toggle" id="togglePassword" style="margin-left: -30px; cursor: pointer;"></i>
         </div><br>
 
-        <label for="confirm_password">Confirm Password:</label>
-        <div class="password-container">
-            <input type="password" id="confirm_password" name="confirm_password" required>
-            <i class="far fa-eye password-toggle" style="margin-left: -30px; cursor: pointer;"></i>
-        </div><br>
-
-        <button type="button" onclick="generatePassword()">Generate Password</button><br>
-        <button type="submit">Signup</button>
+        <!-- Submit button for the login form -->
+        <button type="submit">Login</button>
     </form>
 </body>
 </html>
