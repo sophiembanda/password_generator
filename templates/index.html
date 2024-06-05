@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
+    <!-- Link to Font Awesome for the eye icon used in password visibility toggle -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
+        /* Styles for the password input container */
         .password-container {
             position: relative;
             display: inline-block;
         }
+        /* Styles for the password visibility toggle icon */
         .password-toggle {
             position: absolute;
             right: 10px;
@@ -19,6 +22,7 @@
         }
     </style>
     <script>
+        // Function to generate a password by fetching from the server
         function generatePassword() {
             fetch('/generate-password')
                 .then(response => response.json())
@@ -28,11 +32,14 @@
                 });
         }
 
+        // Event listener for the DOMContentLoaded event to set up password visibility toggle
         document.addEventListener('DOMContentLoaded', function () {
             const togglePassword = document.querySelector('#togglePassword');
             const password = document.querySelector('#password');
 
+            // Event listener for the password visibility toggle icon click event
             togglePassword.addEventListener('click', function (e) {
+                // Toggle password visibility
                 const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
                 password.setAttribute('type', type);
                 this.classList.toggle('fa-eye-slash');
@@ -42,23 +49,29 @@
 </head>
 <body>
     <h1>Signup</h1>
+    <!-- Signup form with POST method action to /signup -->
     <form method="POST" action="/signup">
+        <!-- Username input field -->
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br>
 
+        <!-- Password input field with visibility toggle -->
         <label for="password">Password:</label>
         <div class="password-container">
             <input type="password" id="password" name="password" required>
             <i class="far fa-eye password-toggle" id="togglePassword" style="margin-left: -30px; cursor: pointer;"></i>
         </div><br>
 
+        <!-- Confirm password input field with visibility toggle -->
         <label for="confirm_password">Confirm Password:</label>
         <div class="password-container">
             <input type="password" id="confirm_password" name="confirm_password" required>
             <i class="far fa-eye password-toggle" style="margin-left: -30px; cursor: pointer;"></i>
         </div><br>
 
+        <!-- Button to generate a random password -->
         <button type="button" onclick="generatePassword()">Generate Password</button><br>
+        <!-- Submit button for the form -->
         <button type="submit">Signup</button>
     </form>
 </body>
