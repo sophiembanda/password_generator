@@ -2,32 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Meta tag to set the viewport to ensure the page is rendered well on different devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
+
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    
+    <style>
+        /* CSS to position the password input field and toggle icon */
+        .password-container {
+            position: relative;
+            display: inline-block;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    </style>
+    
     <script>
+        /* Function to fetch and generate a password from the server */
         function generatePassword() {
             fetch('/generate-password')
                 .then(response => response.json())
                 .then(data => {
+                    // Set the fetched password in both password and confirm password fields
                     document.getElementById('password').value = data.password;
                     document.getElementById('confirm_password').value = data.password;
                 });
         }
+
+        /* Function to toggle the visibility of the password field */
+        function togglePasswordVisibility(id) {
+            const passwordField = document.getElementById(id);
+            const passwordToggle = passwordField.nextElementSibling;
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                passwordToggle.classList.remove('fa-eye');
+                passwordToggle.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = "password";
+                passwordToggle.classList.remove('fa-eye-slash');
+                passwordToggle.classList.add('fa-eye');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePassword = document.querySelector('#togglePassword');
+            const password = document.querySelector('#password');
+
+            togglePassword.addEventListener('click', function (e) {
+                // Toggle the type attribute
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                // Toggle the eye slash icon
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
     </script>
 </head>
 <body>
+    <!-- Main heading -->
     <h1>Signup</h1>
+    
+    <!-- Signup form with username, password, and confirm password fields -->
     <form method="POST" action="/signup">
+        <!-- Username input field -->
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br>
 
+        <!-- Password input field with toggle visibility -->
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
+        <div class="password-container">
+            <input type="password" id="password" name="password" required>
+            <!-- Icon to toggle password visibility -->
+            <i class="far fa-eye password-toggle" id="togglePassword" style="margin-left: -30px; cursor: pointer;"></i>
+        </div><br>
 
+        <!-- Confirm password input field with toggle visibility -->
         <label for="confirm_password">Confirm Password:</label>
-        <input type="password" id="confirm_password" name="confirm_password" required><br>
+        <div class="password-container">
+            <input type="password" id="confirm_password" name="confirm_password" required>
+            <!-- Icon to toggle confirm password visibility -->
+            <i class="far fa-eye password-toggle" onclick="togglePasswordVisibility('confirm_password')" style="margin-left: -30px; cursor: pointer;"></i>
+        </div><br>
 
+        <!-- Button to generate a random password -->
         <button type="button" onclick="generatePassword()">Generate Password</button><br>
+        <!-- Submit button for the signup form -->
         <button type="submit">Signup</button>
     </form>
 </body>
