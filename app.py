@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
 import sqlite3
 import os
 import random
@@ -51,10 +51,10 @@ def signup():
                 c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
                 conn.commit()
             flash('User registered successfully!')
-            return redirect(url_for('login'))
+            return redirect(url_for('homepage'))
         except sqlite3.IntegrityError:
             flash('Username already exists!')
-            return redirect(url_for('login'))
+            return redirect(url_for('signup'))
     
     return render_template('signup.html')
 
@@ -75,11 +75,12 @@ def login():
             user = c.fetchone()
 
         if user:
+            session['username'] = username  # Set session variable
             flash('User logged in successfully!')
-            return redirect(url_for('dashboard'))  # Change this to the route you want to redirect after login
+            return redirect(url_for('homepage'))
         else:
             flash('Invalid username or password!')
-            return redirect(url_for('signup'))
+            return redirect(url_for('login'))
     
     return render_template('login.html')
 
@@ -88,6 +89,21 @@ def login():
 def generate_password_route():
     password = generate_password()
     return jsonify(password=password)
+
+# Route for the homepage
+@app.route('/homepage')
+def homepage():
+    # if 'username' not in session:
+    #     flash('You need to login first.')
+    #     return redirect(url_for('login'))
+    return render_template('homepage.html')
+
+# Route for logging out
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    flash('You have been logged out.')
+    return redirect(url_for('login'))
 
 # Run the Flask application
 if __name__ == '__main__':
